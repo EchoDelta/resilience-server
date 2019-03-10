@@ -1,7 +1,6 @@
 ﻿namespace ResilienceServer.Web.ResilienceServices
 {
-    public interface IMightFailResilienceService
+    public interface IMightFailResilienceService : IResilienceService
     {
-        bool ShouldNextSucceed();
     }
 }

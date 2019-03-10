@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.Extensions.Options;
+using ResilienceServer.Web.Models;
 using ResilienceServer.Web.Options;
 
 namespace ResilienceServer.Web.ResilienceServices
 {
-    public class WaitForItResilienceService : IWaitForItResilienceService
+    public class WaitForItResilienceService : ResilienceBaseService, IWaitForItResilienceService
     {
         private readonly Random _random;
         private readonly double _mean;
@@ -19,7 +21,13 @@ namespace ResilienceServer.Web.ResilienceServices
             _random = new Random();
         }
 
-        public TimeSpan NextWaitTime()
+        public ResilienceResult GetResult()
+        {
+            Thread.Sleep(GetWaitTime());
+            return SuccessfullResult();
+        }
+
+        private TimeSpan GetWaitTime()
         {
             var u1 = 1.0 - _random.NextDouble();
             var u2 = 1.0 - _random.NextDouble();

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using ResilienceServer.Web.Models;
 using ResilienceServer.Web.ResilienceServices;
@@ -28,26 +27,20 @@ namespace ResilienceServer.Web.Controllers
         [HttpGet("mightfail")]
         public ActionResult<ResilienceResult> MightFail()
         {
-            return _mightFailResilienceService.ShouldNextSucceed() 
-                ? SuccessResult()
-                : FailResult();
+            return ResilienceActionResult(_mightFailResilienceService.GetResult());
         }
 
         [HttpGet("waitforit")]
         public ActionResult<ResilienceResult> WaitForIt()
         {
-            Thread.Sleep(_waitForItResilienceService.NextWaitTime());
-            return SuccessResult();
+            return ResilienceActionResult(_waitForItResilienceService.GetResult());
         }
 
-        private ActionResult<ResilienceResult> SuccessResult()
+        private ActionResult<ResilienceResult> ResilienceActionResult(ResilienceResult resilienceResult)
         {
-            return new ResilienceResult();
-        }
-
-        private ActionResult FailResult()
-        {
-            return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+            return resilienceResult is FailedResilienceResult
+                ? (ActionResult<ResilienceResult>) new StatusCodeResult((int) HttpStatusCode.InternalServerError)
+                : resilienceResult;
         }
     }
 }

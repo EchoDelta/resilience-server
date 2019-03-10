@@ -2,8 +2,7 @@
 
 namespace ResilienceServer.Web.ResilienceServices
 {
-    public interface IWaitForItResilienceService
+    public interface IWaitForItResilienceService : IResilienceService
     {
-        TimeSpan NextWaitTime();
     }
 }

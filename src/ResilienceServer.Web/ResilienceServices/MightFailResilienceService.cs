@@ -1,10 +1,11 @@
 ﻿using System;
 using Microsoft.Extensions.Options;
+using ResilienceServer.Web.Models;
 using ResilienceServer.Web.Options;
 
 namespace ResilienceServer.Web.ResilienceServices
 {
-    public class MightFailResilienceService : IMightFailResilienceService
+    public class MightFailResilienceService : ResilienceBaseService, IMightFailResilienceService
     {
         private readonly double _failrate;
         private readonly Random _random;
@@ -17,7 +18,12 @@ namespace ResilienceServer.Web.ResilienceServices
             _random = new Random();
         }
 
-        public bool ShouldNextSucceed()
+        public ResilienceResult GetResult()
+        {
+            return ShouldSucceed() ? SuccessfullResult() : FailedResult();
+        }
+
+        private bool ShouldSucceed()
         {
             var number = _random.NextDouble();
             return number > _failrate;
