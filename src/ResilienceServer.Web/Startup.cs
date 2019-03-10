@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ResilienceServer.Web.Options;
+using ResilienceServer.Web.ResilienceServices;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace ResilienceServer.Web
@@ -35,6 +37,9 @@ namespace ResilienceServer.Web
                     Description = "HTTP server for testing resilience libraries."
                 });
             });
+            services.Configure<ResilienceOptions>(Configuration.GetSection("Resilience"));
+
+            services.AddSingleton<IMightFailResilienceService, MightFailResilienceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
