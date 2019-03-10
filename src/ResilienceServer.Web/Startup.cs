@@ -40,6 +40,7 @@ namespace ResilienceServer.Web
             services.Configure<ResilienceOptions>(Configuration.GetSection("Resilience"));
 
             services.AddSingleton<IMightFailResilienceService, MightFailResilienceService>();
+            services.AddSingleton<IWaitForItResilienceService, WaitForItResilienceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

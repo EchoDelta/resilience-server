@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using ResilienceServer.Web.Models;
 using ResilienceServer.Web.ResilienceServices;
@@ -12,10 +11,12 @@ namespace ResilienceServer.Web.Controllers
     public class ResilienceController : ControllerBase
     {
         private readonly IMightFailResilienceService _mightFailResilienceService;
+        private readonly IWaitForItResilienceService _waitForItResilienceService;
 
-        public ResilienceController(IMightFailResilienceService mightFailResilienceService)
+        public ResilienceController(IMightFailResilienceService mightFailResilienceService, IWaitForItResilienceService waitForItResilienceService)
         {
             _mightFailResilienceService = mightFailResilienceService;
+            _waitForItResilienceService = waitForItResilienceService;
         }
 
         [HttpGet("stable")]
@@ -30,6 +31,13 @@ namespace ResilienceServer.Web.Controllers
             return _mightFailResilienceService.ShouldNextSucceed() 
                 ? SuccessResult()
                 : FailResult();
+        }
+
+        [HttpGet("waitforit")]
+        public ActionResult<ResilienceResult> WaitForIt()
+        {
+            Thread.Sleep(_waitForItResilienceService.NextWaitTime());
+            return SuccessResult();
         }
 
         private ActionResult<ResilienceResult> SuccessResult()
