@@ -11,11 +11,13 @@ namespace ResilienceServer.Web.Controllers
     {
         private readonly IMightFailResilienceService _mightFailResilienceService;
         private readonly IWaitForItResilienceService _waitForItResilienceService;
+        private readonly IFragileResilienceService _fragileResilienceService;
 
-        public ResilienceController(IMightFailResilienceService mightFailResilienceService, IWaitForItResilienceService waitForItResilienceService)
+        public ResilienceController(IMightFailResilienceService mightFailResilienceService, IWaitForItResilienceService waitForItResilienceService, IFragileResilienceService fragileResilienceService)
         {
             _mightFailResilienceService = mightFailResilienceService;
             _waitForItResilienceService = waitForItResilienceService;
+            _fragileResilienceService = fragileResilienceService;
         }
 
         [HttpGet("stable")]
@@ -34,6 +36,12 @@ namespace ResilienceServer.Web.Controllers
         public ActionResult<ResilienceResult> WaitForIt()
         {
             return ResilienceActionResult(_waitForItResilienceService.GetResult());
+        }
+
+        [HttpGet("fragile")]
+        public ActionResult<ResilienceResult> Fragile()
+        {
+            return ResilienceActionResult(_fragileResilienceService.GetResult());
         }
 
         private ActionResult<ResilienceResult> ResilienceActionResult(ResilienceResult resilienceResult)

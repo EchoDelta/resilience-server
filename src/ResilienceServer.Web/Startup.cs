@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using ResilienceServer.Web.Options;
 using ResilienceServer.Web.ResilienceServices;
 using Swashbuckle.AspNetCore.Swagger;
@@ -41,6 +35,7 @@ namespace ResilienceServer.Web
 
             services.AddSingleton<IMightFailResilienceService, MightFailResilienceService>();
             services.AddSingleton<IWaitForItResilienceService, WaitForItResilienceService>();
+            services.AddSingleton<IFragileResilienceService, FragileResilienceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
